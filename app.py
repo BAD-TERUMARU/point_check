@@ -370,9 +370,12 @@ def main():
                         continue
                     display_df = df.copy()
                     # 日時 (日付 + 時刻)
-                    display_df["日時"] = pd.to_datetime(
-                        display_df["start_time"], unit="s"
-                    ).dt.strftime("%Y-%m-%d %H:%M")
+                    display_df["日時"] = (
+                        pd.to_datetime(display_df["start_time"], unit="s")
+                        .dt.tz_localize("UTC")
+                        .dt.tz_convert("Asia/Tokyo")
+                        .dt.strftime("%Y-%m-%d %H:%M")
+                    )
                     display_df = display_df[["日時", "rank", "score", "grading_score", "absolute_pt"]].copy()
                     display_df.columns = ["日時", "着順", "スコア", "PT変動", "段位PT"]
                     display_df = display_df.sort_values("日時", ascending=False)
